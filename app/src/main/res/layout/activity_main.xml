@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -67,13 +67,14 @@
                 android:id="@+id/myfab"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="@dimen/codelab_fab_margin_bottom"
+                android:layout_marginRight="@dimen/codelab_fab_margin_right"
                 android:src="@drawable/fab"
                 app:fabSize="normal" />
 
 
-        </RelativeLayout>
+        </FrameLayout>
 
         <android.support.design.widget.NavigationView
             android:id="@+id/nav"

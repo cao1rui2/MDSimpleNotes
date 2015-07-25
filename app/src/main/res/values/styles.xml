@@ -10,6 +10,10 @@
         <item name="colorAccent">#4876FF</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:navigationBarColor">#4876FF</item>
+        <!--
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/holo_blue_dark</item>
+        -->
     </style>
 
     <style name="AppTheme" parent="@style/AppBaseTheme"></style>

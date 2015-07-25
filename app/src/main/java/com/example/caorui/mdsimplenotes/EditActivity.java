@@ -31,8 +31,11 @@ public class EditActivity extends AppCompatActivity {
     private Note note = new Note();
     private NoteDB noteDB;
     private boolean isfromfab;
+    private String sharedText;
     private boolean isfromrec;
     private int noteId;
+    private String action;
+    private String type;
 
     private ShareActionProvider mShareActionProvider;
 
@@ -46,7 +49,11 @@ public class EditActivity extends AppCompatActivity {
         isfromfab = getIntent().getBooleanExtra("from_fab", false);
         isfromrec = getIntent().getBooleanExtra("from_rec", false);
         noteId = getIntent().getIntExtra("note_id", 0);
-        if (isfromfab) {
+
+        action = getIntent().getAction();
+        type = getIntent().getType();
+        if (isfromfab || (Intent.ACTION_SEND.equals(action) && "text/plain".equals(type))) {
+            edit.setText(getIntent().getStringExtra(Intent.EXTRA_TEXT));
             SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
             Date curDate = new Date(System.currentTimeMillis());
             String firsttime = formatter.format(curDate);
@@ -75,6 +82,10 @@ public class EditActivity extends AppCompatActivity {
                         Toast.makeText(EditActivity.this, "已复制到剪切板", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_share:
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("text/plain");
+                        intent.putExtra(Intent.EXTRA_TEXT, edit.getText().toString());
+                        startActivity(Intent.createChooser(intent, getResources().getText(R.string.send_to)));
                         break;
                     case R.id.action_empty:
                         //Toast.makeText(EditActivity.this, "action_empty", 0).show();
@@ -122,19 +133,33 @@ public class EditActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_edit, menu);
+        /*
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_TEXT, edit.getText().toString());
         intent.setType("text/*");
         mShareActionProvider.setShareIntent(intent);
+        */
         return true;
 
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                EditActivity.this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onPause() {
 
-        if (isfromfab) {
+        if (isfromfab || (Intent.ACTION_SEND.equals(action) && "text/plain".equals(type))) {
             note.setText(edit.getText().toString());
             SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
             Date curDate = new Date(System.currentTimeMillis());

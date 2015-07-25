@@ -12,10 +12,10 @@
     <item
         android:id="@+id/action_share"
         android:title="分享"
-        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        android:icon="@drawable/share"
         android:orderInCategory="70"
         app:showAsAction="ifRoom" />
-
+    <!--app:actionProviderClass="android.support.v7.widget.ShareActionProvider"-->
     <item
         android:id="@+id/action_empty"
         android:title="清空笔记"

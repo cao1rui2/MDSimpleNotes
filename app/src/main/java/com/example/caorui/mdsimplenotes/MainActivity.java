@@ -1,6 +1,9 @@
 package com.example.caorui.mdsimplenotes;
 
 import android.content.Intent;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.AlarmClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
@@ -15,10 +18,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +49,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(getResources().getColor(android.R.color.holo_blue_dark));
+        }
+        */
+
         setContentView(R.layout.activity_main);
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.setTitle("简单笔记");
         setSupportActionBar(mToolbar);
@@ -50,17 +66,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.action_settings:
-                        Toast.makeText(MainActivity.this, "action_settings", 0).show();
+                    //case R.id.action_settings:
+                        //Toast.makeText(MainActivity.this, "action_settings", 0).show();
                         //noteList.clear();
                         //noteList = noteDB.loadNotes();
                         //noteAdapter = new NoteAdapter(MainActivity.this, noteList, noteDB);
                         //recyclerView.setAdapter(noteAdapter);
                         //noteAdapter.notifyDataSetChanged();
                         //noteAdapter.notifyItemRangeChanged(0, noteAdapter.getItemCount());
-                        break;
+                        //break;
                     case R.id.action_about:
-                        Toast.makeText(MainActivity.this, "action_about", 0).show();
+                        //Toast.makeText(MainActivity.this, "action_about", 0).show();
+                        Intent aIntent = new Intent(MainActivity.this, AboutActivity.class);
+                        startActivity(aIntent);
                         break;
                     default:
                         break;
@@ -120,9 +138,42 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 menuItem.setChecked(true);
-                return true;
+                mDrawerLayout.closeDrawers();
+                switch (menuItem.getItemId()) {
+                    case R.id.navItem1:
+                        Intent alarm = new Intent(AlarmClock.ACTION_SET_ALARM);
+                        startActivity(alarm);
+                        break;
+                    case R.id.navItem2:
+                        try {
+                            export();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                }
+                return false;
             }
         });
+    }
+
+    private void export() throws IOException {
+        if (Environment.MEDIA_MOUNTED.equals(Environment
+                .getExternalStorageState())) {
+            //Log.i("main", "本设备有存储卡！");
+            File file = new File(Environment.getExternalStorageDirectory(),
+                    "笔记文本.txt");
+            FileOutputStream fos = null;
+            fos = new FileOutputStream(file);
+            for (Note note : noteList) {
+                fos.write((note.getId() + "\n" + note.getText() + "\n" + note.getFirstTime() + "\n" + note.getLastTime() + "\n\n\n\n").getBytes());
+            }
+            fos.close();
+            Toast.makeText(this, "已导出txt文件至内部存储根目录", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "无存储设备", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -137,12 +188,12 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        //int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        //if (id == R.id.action_settings) {
+            //return true;
+        //}
 
         return super.onOptionsItemSelected(item);
     }

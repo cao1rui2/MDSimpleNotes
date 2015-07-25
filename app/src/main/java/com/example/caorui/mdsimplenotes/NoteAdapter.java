@@ -39,7 +39,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 int position = vh.getPosition();
-                Toast.makeText(v.getContext(), "点击" + position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(v.getContext(), "点击" + position, Toast.LENGTH_SHORT).show();
                 int id = noteList.get(position).getId();
                 Intent intent = new Intent(context, EditActivity.class);
                 intent.putExtra("from_rec", true);
@@ -52,7 +52,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             @Override
             public boolean onLongClick(View v) {
                 int position = vh.getPosition();
-                Toast.makeText(v.getContext(), "点击" + position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(v.getContext(), "点击" + position, Toast.LENGTH_SHORT).show();
                 showDialog(position);
                 return true;
             }
@@ -63,8 +63,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.noteFirst.setText("创建时间:" + noteList.get(position).getFirstTime());
-        holder.noteLast.setText("更新时间:" + noteList.get(position).getLastTime());
+        holder.noteFirst.setText("——————————" + noteList.get(position).getFirstTime() + " 创建——————————");
+        holder.noteLast.setText("——————————" +noteList.get(position).getLastTime() + " 更新——————————");
         holder.noteText.setText(noteList.get(position).getText());
     }
 
@@ -79,10 +79,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
         String[] dialogItems = new String[]{
                 context.getString(R.string.delete_one_item),
-                context.getString(R.string.add_one_item),
-                context.getString(R.string.move_one_item),
-                context.getString(R.string.change_one_item),
-                context.getString(R.string.add_many_items),
+                "添加（测试）",
+                "向下移动两位（测试）",
+                "修改（测试）",
+                "大量添加（测试）",
         };
         builder.setItems(dialogItems, new DialogInterface.OnClickListener() {
             @Override
@@ -113,6 +113,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
                     case 4:
                         //add many items
                         List<Note> insertList = new ArrayList<Note>();
+                        insertList.add(new Note());
                         insertList.add(new Note());
                         insertList.add(new Note());
 

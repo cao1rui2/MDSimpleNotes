@@ -15,7 +15,8 @@
             android:layout_height="match_parent"
             android:gravity="top"
             android:textColor="@android:color/black"
-            android:autoLink="all"
+            android:autoLink="web"
+            android:textSize="20sp"
             android:hint="简单笔记，记录人生" />
     </android.support.design.widget.TextInputLayout>
 </LinearLayout>
