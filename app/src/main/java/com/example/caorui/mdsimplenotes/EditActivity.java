@@ -53,11 +53,15 @@ public class EditActivity extends AppCompatActivity {
         action = getIntent().getAction();
         type = getIntent().getType();
         if (isfromfab || (Intent.ACTION_SEND.equals(action) && "text/plain".equals(type))) {
+
             edit.setText(getIntent().getStringExtra(Intent.EXTRA_TEXT));
             SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
             Date curDate = new Date(System.currentTimeMillis());
             String firsttime = formatter.format(curDate);
             note.setFirstTime(firsttime);
+            noteDB.saveNote(note);//此时的note没有id
+            List<Note> noteList = noteDB.loadNotes();
+            note = noteList.get(noteList.size() - 1);//获取id，位之后的update做准备
         } else if (isfromrec) {
             note = noteDB.loadNote(noteId);
             edit.setText(note.getText());
@@ -160,15 +164,21 @@ public class EditActivity extends AppCompatActivity {
     protected void onPause() {
 
         if (isfromfab || (Intent.ACTION_SEND.equals(action) && "text/plain".equals(type))) {
-            note.setText(edit.getText().toString());
-            SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
-            Date curDate = new Date(System.currentTimeMillis());
-            String lasttime = formatter.format(curDate);
-            note.setLastTime(lasttime);
-            noteDB.saveNote(note);
+            if (TextUtils.isEmpty(edit.getText().toString())) {
+                noteDB.deleteNote(note.getId());
+                this.finish();
+            } else {
+                note.setText(edit.getText().toString());
+                SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+                Date curDate = new Date(System.currentTimeMillis());
+                String lasttime = formatter.format(curDate);
+                note.setLastTime(lasttime);
+                noteDB.updateNote(note);
+            }
         } else {
             if (TextUtils.isEmpty(edit.getText().toString())) {
                 noteDB.deleteNote(noteId);
+                this.finish();
             } else if (!edit.getText().toString().equals( note.getText())) {
                 note.setText(edit.getText().toString());
                 SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");

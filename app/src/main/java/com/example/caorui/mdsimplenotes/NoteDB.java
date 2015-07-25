@@ -32,13 +32,11 @@ public class NoteDB {
     }
 
     public void saveNote(Note note) {
-        if (!TextUtils.isEmpty(note.getText())) {
-            ContentValues values = new ContentValues();
-            values.put("note_first", note.getFirstTime());
-            values.put("note_last", note.getLastTime());
-            values.put("note_text", note.getText());
-            db.insert("Note", null, values);
-        }
+        ContentValues values = new ContentValues();
+        values.put("note_first", note.getFirstTime());
+        values.put("note_last", note.getLastTime());
+        values.put("note_text", note.getText());
+        db.insert("Note", null, values);
     }
 
     public List<Note> loadNotes() {
@@ -63,6 +61,7 @@ public class NoteDB {
 
     public void updateNote(Note note) {
         ContentValues values = new ContentValues();
+        values.put("note_first", note.getFirstTime());
         values.put("note_last", note.getLastTime());
         values.put("note_text", note.getText());
         db.update("Note", values, "id = ?", new String[]{Integer.toString(note.getId())});
