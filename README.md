@@ -1,5 +1,5 @@
 # MDSimpleNotes
-简单笔记
+简单笔记  360市场下载[http://zhushou.360.cn/detail/index/soft_id/3049547](http://zhushou.360.cn/detail/index/soft_id/3049547)
 
 ##项目介绍
 
